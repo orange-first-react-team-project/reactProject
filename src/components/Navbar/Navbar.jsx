@@ -9,10 +9,7 @@ import {
   Chip,
 } from "@material-tailwind/react";
 import {
-  PresentationChartBarIcon,
-  ShoppingBagIcon,
   UserCircleIcon,
-  InboxIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
 
