@@ -1,3 +1,5 @@
+import { Navbar } from '../exports'
+
 function About() {
   return (
     <div>About</div>

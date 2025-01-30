@@ -1,7 +1,10 @@
+import { Navbar } from '../exports'
 
 function Home() {
   return (
-    <div>Home</div>
+    <>
+      <Navbar />
+    </>
   )
 }
 

@@ -1,3 +1,5 @@
+import { Navbar } from '../exports'
+
 function Profile() {
   return (
     <div>Profile</div>
