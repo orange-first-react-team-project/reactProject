@@ -57,3 +57,26 @@ function App() {
 }
 
 export default App
+
+
+
+
+
+
+
+
+
+
+
+// import React from "react";
+// import Contact from "./components/Contact/Contact.jsx";
+
+// function app() {
+//   return (
+//     <div className="App">
+//       <Contact />
+//     </div>
+//   );
+// }
+
+// export default app;
