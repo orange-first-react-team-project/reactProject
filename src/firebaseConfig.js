@@ -11,9 +11,10 @@ const firebaseConfig = {
   storageBucket: "react-team-project-e3fab.firebasestorage.app",
   messagingSenderId: "1065554260522",
   appId: "1:1065554260522:web:464a1284cc066136008953",
+  databaseURL: 'https://react-team-project-e3fab-default-rtdb.firebaseio.com'
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-export { app };
+export { app, firebaseConfig };
