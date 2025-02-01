@@ -15,7 +15,9 @@ import { Assignment, Dashboard, Article } from '@mui/icons-material';
 
 function Navbar() {
   return (
-    <Card className="flex flex-row items-center justify-between top-0 w-full p-4 shadow-xl shadow-blue-gray-900/5 bg-[#2973B2] rounded-none">
+
+    <Card className="flex flex-row items-center justify-between top-0 w-full p-1 shadow-xl shadow-blue-gray-900/5 bg-[#2973B2] rounded-none">
+
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray" className="text-white">
           <Link to='/'>To-Do List</Link>

@@ -1,9 +1,342 @@
-import { Navbar } from '../exports'
+import { useState, useEffect } from "react";
+import { Navbar } from '../exports';
+import axios from "axios";
+import { app, firebaseConfig } from '../../firebaseConfig';
 
-function Task() {
+const Task = ({ userId }) => {
+  const [columns, setColumns] = useState({
+    todo: { name: "📝 To Do", color: "bg-blue-100", tasks: [] },
+    doing: { name: "⚙️ In Progress", color: "bg-yellow-100", tasks: [] },
+    done: { name: "✅ Done", color: "bg-green-100", tasks: [] }
+  });
+  const [showModal, setShowModal] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [newTask, setNewTask] = useState({
+    title: "",
+    description: "",
+    priority: "Low",
+    status: "todo",
+    deadline: "",
+    isDeleted: false // إضافة حقل isDeleted بشكل افتراضي
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [attachments, setAttachments] = useState([]);
+  const [filterPriority, setFilterPriority] = useState("All");
+
+  // جلب التاسكات من Firebase مع تصفية المهام المحذوفة
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const response = await axios.get(`${firebaseConfig.databaseURL}/tasks.json`);
+        const tasks = response.data;
+
+        if (tasks) {
+          const updatedColumns = {
+            todo: { ...columns.todo, tasks: [] },
+            doing: { ...columns.doing, tasks: [] },
+            done: { ...columns.done, tasks: [] }
+          };
+
+          Object.keys(tasks).forEach((taskId) => {
+            const task = tasks[taskId];
+            if (!task.isDeleted) {
+              updatedColumns[task.status].tasks.push({ ...task, id: taskId });
+            }
+          });
+
+          setColumns(updatedColumns);
+        }
+      } catch (error) {
+        console.error("Error fetching tasks:", error);
+      }
+    };
+
+    fetchTasks();
+  }, []);
+
+  const handleSaveTask = async () => {
+    if (newTask.title.trim() === "") return;
+
+    try {
+      if (isEditing) {
+        await axios.put(`${firebaseConfig.databaseURL}/tasks/${editingTaskId}.json`, newTask);
+
+        // Update state after editing:
+        setColumns(prevColumns => {
+          const updatedColumns = { ...prevColumns };
+          for (const status in updatedColumns) {
+            updatedColumns[status].tasks = updatedColumns[status].tasks.map(task =>
+              task.id === editingTaskId ? { ...newTask, id: editingTaskId } : task
+            );
+          }
+          return updatedColumns;
+        });
+
+      } else {
+        const taskWithDeletedField = { ...newTask, isDeleted: false };
+        const response = await axios.post(`${firebaseConfig.databaseURL}/tasks.json`, taskWithDeletedField);
+        const taskId = response.data.name;
+
+        setColumns(prevColumns => ({
+          ...prevColumns,
+          todo: { ...prevColumns.todo, tasks: [...prevColumns.todo.tasks, { ...taskWithDeletedField, id: taskId }] }
+        }));
+      }
+
+      setShowModal(false);
+      setNewTask({ title: "", description: "", priority: "Low", status: "todo", deadline: "", isDeleted: false });
+    } catch (error) {
+      console.error("Error saving task:", error);
+    }
+  };
+  const handleDeleteTask = async (columnId, taskId) => {
+    try {
+      // تحديث المهمة بوضع isDeleted = true
+      await axios.patch(`${firebaseConfig.databaseURL}/tasks/${taskId}.json`, {
+        isDeleted: true,
+      });
+
+      // تحديث الحالة المحلية لإزالة المهمة من العرض
+      setColumns((prevColumns) => ({
+        ...prevColumns,
+        [columnId]: {
+          ...prevColumns[columnId],
+          tasks: prevColumns[columnId].tasks.filter((task) => task.id !== taskId)
+        }
+      }));
+    } catch (error) {
+      console.error("Error soft deleting task:", error);
+    }
+  };
+
+
+  const handleStatusChange = async (taskId, newStatus) => {
+    try {
+      const response = await axios.get(`${firebaseConfig.databaseURL}/tasks/${taskId}.json`);
+      const task = response.data;
+
+      if (task) {
+        await axios.put(`${firebaseConfig.databaseURL}/tasks/${taskId}.json`, { ...task, status: newStatus });
+
+        setColumns(prevColumns => {
+          const updatedColumns = { ...prevColumns };
+
+          // Remove from old column
+          for (const colId in updatedColumns) {
+            updatedColumns[colId].tasks = updatedColumns[colId].tasks.filter(t => t.id !== taskId);
+          }
+
+          // Add to new column
+          updatedColumns[newStatus].tasks.push({ ...task, id: taskId, status: newStatus }); // Include id
+
+          return updatedColumns;
+        });
+      }
+    } catch (error) {
+      console.error("Error updating task status:", error);
+    }
+  };
+
+  // فتح نافذة إنشاء/تحرير التاسك
+  const openModal = (task = null) => {
+    if (task) {
+      setIsEditing(true);
+      setEditingTaskId(task.id);
+      setNewTask(task);
+    } else {
+      setIsEditing(false);
+      setNewTask({ title: "", description: "", priority: "Low", status: "todo", deadline: "", isDeleted: false });
+    }
+    setShowModal(true);
+  };
+
+  // فتح نافذة تفاصيل التاسك
+  const openDetailModal = (task) => {
+    setSelectedTask(task);
+    setShowDetailModal(true);
+  };
+
+  // تصفية التاسكات حسب البحث والأولوية
+  const filterTasks = (tasks) => {
+    return tasks.filter((task) => {
+      const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesPriority = filterPriority === "All" || task.priority === filterPriority;
+      return matchesSearch && matchesPriority;
+    });
+  };
+
   return (
-    <div>Task</div>
-  )
-}
+    <div>
+      <Navbar />
+      <div className="container mx-auto p-6">
+        <input
+          type="text"
+          placeholder="Search by Title..."
+          className="w-full border p-2 mt-3 rounded-lg mb-6"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
 
-export default Task
+        <div className="flex space-x-2 mb-6">
+          <button
+            onClick={() => setFilterPriority("All")}
+            className={`px-4 py-2 rounded-lg ${filterPriority === "All" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+          >
+            All
+          </button>
+          <button
+            onClick={() => setFilterPriority("Low")}
+            className={`px-4 py-2 rounded-lg ${filterPriority === "Low" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+          >
+            Low
+          </button>
+          <button
+            onClick={() => setFilterPriority("Medium")}
+            className={`px-4 py-2 rounded-lg ${filterPriority === "Medium" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+          >
+            Medium
+          </button>
+          <button
+            onClick={() => setFilterPriority("High")}
+            className={`px-4 py-2 rounded-lg ${filterPriority === "High" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
+          >
+            High
+          </button>
+        </div>
+
+        <button onClick={() => openModal()} className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition">
+          ➕ Create Task
+        </button>
+
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">{isEditing ? "Edit Task" : "Create New Task"}</h2>
+                <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-red-500">✖</button>
+              </div>
+
+              <input type="text" placeholder="Title" className="w-full border p-2 mt-3 rounded-lg" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} />
+              <textarea placeholder="Description" className="w-full border p-2 mt-3 rounded-lg" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}></textarea>
+
+              <select className="w-full border p-2 mt-3 rounded-lg" value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+              </select>
+
+              <input type="date" className="w-full border p-2 mt-3 rounded-lg" value={newTask.deadline} onChange={(e) => setNewTask({ ...newTask, deadline: e.target.value })} />
+
+              <div className="flex justify-between mt-4">
+                <button onClick={() => setShowModal(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg">Cancel</button>
+                <button onClick={handleSaveTask} className="bg-green-500 text-white px-4 py-2 rounded-lg">{isEditing ? "Update" : "Add"}</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showDetailModal && selectedTask && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+              <div className="flex justify-between items-center">
+                <h2 className="text-xl font-bold">Task Details</h2>
+                <button onClick={() => setShowDetailModal(false)} className="text-gray-500 hover:text-red-500">✖</button>
+              </div>
+
+              <h3 className="font-bold mt-3">{selectedTask?.title}</h3>
+              <p className="text-sm text-gray-600">{selectedTask?.description}</p>
+              <p className="text-xs text-red-500">Priority: {selectedTask?.priority}</p>
+              <p className="text-xs text-gray-500">Deadline: {selectedTask?.deadline}</p>
+              <div className="mt-4">
+                <h4 className="font-semibold">Attachments</h4>
+                {attachments.map((attachment, index) => (
+                  <div key={index} className="text-sm text-gray-600">
+                    <a
+                      href={attachment.url}
+                      download={attachment.name}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {attachment.name}
+                    </a>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-4">
+                <input
+                  type="file"
+                  onChange={(e) => handleAddAttachment(e.target.files[0])}
+                  className="w-full border p-2 rounded-lg"
+                />
+              </div>
+
+              <div className="flex justify-end mt-4">
+                <button onClick={() => setShowDetailModal(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg">Close</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-3 gap-6 mt-6">
+          {Object.keys(columns).map((columnId) => {
+            const column = columns[columnId];
+            const filteredTasks = filterTasks(column.tasks);
+            return (
+              <div key={columnId} className={`p-4 rounded-lg shadow-md ${column.color}`}>
+                <h2 className="text-lg font-semibold mb-3">{column.name}</h2>
+                {filteredTasks.map((task) => (
+                  <div key={task.id} className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition mb-3">
+                    <h3
+                      className="font-bold cursor-pointer hover:text-blue-600"
+                      onClick={() => openDetailModal(task)}
+                    >
+                      {task.title}
+                    </h3>
+                    <p className="text-sm text-gray-600">{task.description}</p>
+                    <p className="text-xs text-red-500">Priority: {task.priority}</p>
+                    <p className="text-xs text-gray-500">Deadline: {task.deadline}</p>
+                    <select
+                      className="w-full border p-2 mt-2 rounded-lg bg-gray-100"
+                      value={task.status}
+                      onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                    >
+                      <option value="todo">To Do</option>
+                      <option value="doing">Doing</option>
+                      <option value="done">Done</option>
+                    </select>
+
+                    <div className="flex justify-end space-x-2 mt-2">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          openModal(task);
+                        }}
+                        className="bg-yellow-500 text-white px-3 py-1 rounded-lg"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteTask(columnId, task.id);
+                        }}
+                        className="bg-red-500 text-white px-3 py-1 rounded-lg"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Task;

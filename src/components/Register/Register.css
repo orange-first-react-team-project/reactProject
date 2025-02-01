@@ -61,12 +61,15 @@
   button:hover {
     background-color: #0056b3;
   }
+<<<<<<< HEAD
   .error-message {
     color: red;
     font-size: 12px;
     margin-top: 5px;
   }
   
+=======
+>>>>>>> 08fe89479d72d88eff2049b9a442e3c2448a488b
   /* تنسيق الزر الذي يحتوي على شعار Google */
   .google-signup-container {
     display: flex;

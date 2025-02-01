@@ -35,9 +35,15 @@ function Login() {
       const user = userCredential.user;
 
       if (formData.rememberMe) {
+<<<<<<< HEAD
         localStorage.setItem('user', JSON.stringify(userData));
       } else {
         sessionStorage.setItem('user', JSON.stringify(userData));
+=======
+        localStorage.setItem('user', JSON.stringify(user));
+      } else {
+        sessionStorage.setItem('user', JSON.stringify(user));
+>>>>>>> 08fe89479d72d88eff2049b9a442e3c2448a488b
       }
 
       navigate('/'); // التوجيه إلى الصفحة الرئيسية أو اللوحة بعد تسجيل الدخول
@@ -71,6 +77,12 @@ function Login() {
   };
 
   return (
+<<<<<<< HEAD
+=======
+
+
+
+>>>>>>> 08fe89479d72d88eff2049b9a442e3c2448a488b
     <div className="login-container">
       <div className="form-container">
         <h2>Sign In</h2>
@@ -129,6 +141,10 @@ function Login() {
         <img src={loginImage} alt="Login" />
       </div>
     </div>
+<<<<<<< HEAD
+=======
+
+>>>>>>> 08fe89479d72d88eff2049b9a442e3c2448a488b
   );
 }
 
