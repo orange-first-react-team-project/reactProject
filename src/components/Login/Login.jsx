@@ -35,9 +35,9 @@ function Login() {
       const user = userCredential.user;
 
       if (formData.rememberMe) {
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(userData));
       } else {
-        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(userData));
       }
 
       navigate('/'); // التوجيه إلى الصفحة الرئيسية أو اللوحة بعد تسجيل الدخول

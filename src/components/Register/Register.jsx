@@ -86,7 +86,7 @@ function RegisterPage() {
 
         alert("Registration successful!");
         console.log("User registered:", user);
-        sessionStorage.setItem("user", JSON.stringify(user));
+        sessionStorage.setItem("user", JSON.stringify(userData));
         navigate('/');  // إعادة التوجيه إلى الصفحة الرئيسية
       } else {
         throw new Error("User not logged in properly.");
