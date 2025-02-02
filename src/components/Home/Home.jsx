@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import "./home.css"
-import Navbar from "../Navbar/Navbar";
+import { Navbar } from "../exports";
 import homepageImage from "../../assets/homepageimage.jpg";
 const Card = ({ children, className }) => (
   <div className={`p-4 bg-white rounded-2xl shadow-md ${className}`}>{children}</div>
