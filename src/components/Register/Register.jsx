@@ -49,10 +49,16 @@ function RegisterPage() {
       };
 
       // ✅ استخدام firebaseConfig.databaseURL بدلاً من app.options.databaseURL
-      await axios.post(
+      await axios.put(
         `${firebaseConfig.databaseURL}/users/${user.uid}.json`,
-        userData
+        {
+          username: formData.username,
+          email: formData.email,
+          userType: formData.userType
+        }
       );
+
+
       sessionStorage.setItem("user", JSON.stringify(userData));
       alert("Registration successful!");
       console.log("User registered:", user);
@@ -167,7 +173,7 @@ function RegisterPage() {
           </div>
         </div>
 
-        <p>Already have an account? <a href="/login" style={{color: "blue", textDecoration: "underline"}}>Sign in</a></p>
+        <p>Already have an account? <a href="/login" style={{ color: "blue", textDecoration: "underline" }}>Sign in</a></p>
       </div>
       <div className="image-container">
         <img src={registerImage} alt="signUp-img" />
