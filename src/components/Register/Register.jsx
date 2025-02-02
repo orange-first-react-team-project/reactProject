@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup 
+} from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { firebaseConfig, auth } from './firebaseConfig'; // ✅ استيراد firebaseConfig
+import { firebaseConfig, auth } from './firebaseConfig'; 
+import { getDatabase, ref, set } from 'firebase/database'; // ✅ استيراد Realtime Database
 import './Register.css';
 import registerImage from './signUp.png';
 
@@ -16,7 +22,14 @@ function RegisterPage() {
     agreeTerms: false
   });
 
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+
   const navigate = useNavigate();
+  const database = getDatabase(); 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -26,11 +39,26 @@ function RegisterPage() {
     }));
   };
 
+  const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d@$!%*?&]{8,}$/;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    let formErrors = {};
+
+    if (!emailRegEx.test(formData.email)) {
+      formErrors.email = "Please enter a valid email address!";
+    }
+    if (!passwordRegEx.test(formData.password)) {
+      formErrors.password = "Password must be at least 8 characters long, contain at least one letter, one number, and one special character.";
+    }
     if (formData.password !== formData.confirmPassword) {
-      alert("Password does not match!");
+      formErrors.confirmPassword = "Passwords do not match!";
+    }
+
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
@@ -42,35 +70,29 @@ function RegisterPage() {
       );
       const user = userCredential.user;
 
-      const userData = {
-        username: formData.username,
-        email: formData.email,
-        userType: formData.userType
-      };
+      if (auth.currentUser) {
+        // هنا نقوم بتخزين بيانات المستخدم في "users/{user.uid}" مباشرة
+        const userRef = ref(database, `users/${user.uid}`);
 
-      // ✅ استخدام firebaseConfig.databaseURL بدلاً من app.options.databaseURL
-      await axios.put(
-        `${firebaseConfig.databaseURL}/users/${user.uid}.json`,
-        {
+        await set(userRef, {
           username: formData.username,
           email: formData.email,
           userType: formData.userType
-        }
-      );
+        });
 
-
-      sessionStorage.setItem("user", JSON.stringify(userData));
-      alert("Registration successful!");
-      console.log("User registered:", user);
-
-      navigate('/');  // Redirect to the homepage
+        alert("Registration successful!");
+        console.log("User registered:", user);
+        sessionStorage.setItem("user", JSON.stringify(formData));
+        navigate('/');  
+      } else {
+        throw new Error("User not logged in properly.");
+      }
     } catch (error) {
       console.error("Error during registration:", error);
       alert("An error occurred while registering: " + error.message);
     }
   };
 
-  // Google sign-up handler
   const handleGoogleSignUp = async () => {
     const provider = new GoogleAuthProvider();
 
@@ -78,10 +100,22 @@ function RegisterPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Optional: Store the user info in sessionStorage
-      // localStorage.setItem("user", JSON.stringify(user));
+      if (auth.currentUser) {
+        // هنا نقوم بتخزين بيانات المستخدم في "users/{user.uid}" مباشرة
+        const userRef = ref(database, `users/${user.uid}`);
 
-      navigate('/');  // Redirect to the homepage after successful login
+        await set(userRef, {
+          username: user.displayName || "Google User",
+          email: user.email,
+          userType: "user",
+          profilePicture: user.photoURL || null
+        });
+
+        sessionStorage.setItem("user", JSON.stringify(user));
+        navigate('/');  
+      } else {
+        throw new Error("User not logged in properly.");
+      }
     } catch (error) {
       console.error("Error during Google sign-up:", error);
       alert("An error occurred while registering with Google: " + error.message);
@@ -112,6 +146,7 @@ function RegisterPage() {
               onChange={handleChange}
               required
             />
+            {errors.email && <p className="error-message">{errors.email}</p>}
           </div>
           <div>
             <label>User Type:</label>
@@ -134,6 +169,7 @@ function RegisterPage() {
               onChange={handleChange}
               required
             />
+            {errors.password && <p className="error-message">{errors.password}</p>}
           </div>
           <div>
             <label>Confirm Password:</label>
@@ -144,6 +180,7 @@ function RegisterPage() {
               onChange={handleChange}
               required
             />
+            {errors.confirmPassword && <p className="error-message">{errors.confirmPassword}</p>}
           </div>
           <div>
             <label>
@@ -160,7 +197,6 @@ function RegisterPage() {
           <button type="submit">Sign Up</button>
         </form>
 
-        {/* Google Sign-up button */}
         <div className="google-signup-container">
           <span>Or sign up with</span>
           <div className="google-signup" onClick={handleGoogleSignUp}>
@@ -173,7 +209,7 @@ function RegisterPage() {
           </div>
         </div>
 
-        <p>Already have an account? <a href="/login" style={{ color: "blue", textDecoration: "underline" }}>Sign in</a></p>
+        <p>Already have an account? <a className='signIn' href="/login">Sign in</a></p>
       </div>
       <div className="image-container">
         <img src={registerImage} alt="signUp-img" />
