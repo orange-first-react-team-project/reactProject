@@ -6,12 +6,9 @@ import {
   ListItem,
   ListItemPrefix,
 } from "@material-tailwind/react";
-import {
-  UserCircleIcon,
-  PowerIcon,
-} from "@heroicons/react/24/solid";
+import { UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid";
 
-import { Assignment, Dashboard, Article } from '@mui/icons-material';
+import { Assignment, Dashboard, Article } from "@mui/icons-material";
 
 import useUserType from "./useUserType";
 
