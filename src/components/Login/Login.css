@@ -1,11 +1,3 @@
-/* body {
-  background-color: #cb2323;
-  margin: 0;
-  padding: 0;
-} */
-
-
-
 .login-container {
   display: flex;
   justify-content: space-around;
@@ -116,4 +108,7 @@
 .google-signin img {
   width: 100%;
   height: 100%;
+}
+.signUp{
+  color: black;
 }
