@@ -61,6 +61,12 @@
   button:hover {
     background-color: #0056b3;
   }
+  .error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
   /* تنسيق الزر الذي يحتوي على شعار Google */
   .google-signup-container {
     display: flex;
@@ -90,4 +96,6 @@
     width: 100%;
     height: 100%;
   }
-  
+  .signIn{
+    color: black;
+  }
