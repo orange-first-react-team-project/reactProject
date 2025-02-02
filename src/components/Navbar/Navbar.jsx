@@ -13,11 +13,14 @@ import {
 
 import { Assignment, Dashboard, Article } from '@mui/icons-material';
 
+import useUserType from "./useUserType";
+
 function Navbar() {
+
+  const userType = useUserType();
+
   return (
-
     <Card className="flex flex-row items-center justify-between top-0 w-full p-1 shadow-xl shadow-blue-gray-900/5 bg-[#2973B2] rounded-none">
-
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray" className="text-white">
           <Link to='/'>To-Do List</Link>
@@ -35,14 +38,14 @@ function Navbar() {
         </Link>
 
 
-        <Link to='/dashboard' className="flex items-center text-white">
+        {userType === "admin" && <Link to='/dashboard' className="flex items-center text-white">
           <ListItem className="flex items-center">
             <ListItemPrefix>
               <Dashboard className="h-5 w-5" />
             </ListItemPrefix>
             <p className="min-w-2">Dashboard</p>
           </ListItem>
-        </Link>
+        </Link>}
 
         <Link to='/articles' className="flex items-center text-white">
           <ListItem className="flex items-center">
