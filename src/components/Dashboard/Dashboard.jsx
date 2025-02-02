@@ -7,8 +7,6 @@ import { getAuth } from "firebase/auth";
 import './style.css'
 
 function Dashboard() {
-  const db = getDatabase();
-  const auth = getAuth();
 
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
