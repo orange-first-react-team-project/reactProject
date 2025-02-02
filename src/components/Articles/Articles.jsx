@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { Navbar } from "../exports";
 import "../Articles/Articles.css";
+<<<<<<< HEAD
+import Footer from '../Footer/Footer'
+
+
+import html2canvas from "html2canvas";
+=======
 import axios from "axios";
+>>>>>>> e6256fde98d0d3b412182fdc0c7a942a7e7dd9b7
 import { FloatingWhatsApp } from "react-floating-whatsapp";
 
 // نموذج الاتصال
@@ -219,6 +226,68 @@ function Example() {
         Master Your Time ⏰
       </h1>
 
+<<<<<<< HEAD
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState("");
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+
+  const handleAnswerSelection = (answer) => {
+    setSelectedAnswer(answer);
+  };
+
+  const handleSubmitAnswer = () => {
+    if (selectedAnswer === questions[currentQuestionIndex].answer) {
+      setScore(score + 1);
+    }
+    const nextQuestion = currentQuestionIndex + 1;
+    if (nextQuestion < questions.length) {
+      setCurrentQuestionIndex(nextQuestion);
+    } else {
+      setShowResult(true);
+    }
+    setSelectedAnswer("");
+  };
+
+  return (
+    <>
+      <div className="quiz-container">
+        <h1>Time Management Quiz</h1>
+
+        {showResult ? (
+          <div className="result">
+            <h2>
+              Your Score: {score} out of {questions.length}
+            </h2>
+          </div>
+        ) : (
+          <div className="question-container">
+            <h2>{questions[currentQuestionIndex].question}</h2>
+            <div className="options-container">
+              {questions[currentQuestionIndex].options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleAnswerSelection(option)}
+                  className={`option-btn ${selectedAnswer === option ? "selected" : ""
+                    }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <button onClick={handleSubmitAnswer} className="submit-btn">
+              Next
+            </button>
+          </div>
+        )}
+
+      </div>
+
+    </>
+
+  );
+};
+=======
       <div className="bg-gray-100 py-10">
         <div className="max-w-8xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-6 gap-8">
@@ -246,6 +315,7 @@ function Example() {
           </div>
         </div>
       </div>
+>>>>>>> e6256fde98d0d3b412182fdc0c7a942a7e7dd9b7
 
       <ContactForm />
     </>

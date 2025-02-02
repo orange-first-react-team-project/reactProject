@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { 
-  getAuth, 
-  createUserWithEmailAndPassword, 
-  GoogleAuthProvider, 
-  signInWithPopup 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup
 } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { firebaseConfig, auth } from './firebaseConfig'; 
+import { firebaseConfig, auth } from './firebaseConfig';
 import { getDatabase, ref, set } from 'firebase/database'; // ✅ استيراد Realtime Database
 import './Register.css';
 import registerImage from './signUp.png';
@@ -29,7 +29,7 @@ function RegisterPage() {
   });
 
   const navigate = useNavigate();
-  const database = getDatabase(); 
+  const database = getDatabase();
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -83,7 +83,7 @@ function RegisterPage() {
         alert("Registration successful!");
         console.log("User registered:", user);
         sessionStorage.setItem("user", JSON.stringify(formData));
-        navigate('/');  
+        navigate('/');
       } else {
         throw new Error("User not logged in properly.");
       }
@@ -112,7 +112,7 @@ function RegisterPage() {
         });
 
         sessionStorage.setItem("user", JSON.stringify(user));
-        navigate('/');  
+        navigate('/');
       } else {
         throw new Error("User not logged in properly.");
       }

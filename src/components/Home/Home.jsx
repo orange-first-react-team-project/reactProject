@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import "./home.css"
 import { Navbar } from "../exports";
 import homepageImage from "../../assets/homepageimage.jpg";
+import Footer from '../Footer/Footer'
 const Card = ({ children, className }) => (
   <div className={`p-4 bg-white rounded-2xl shadow-md ${className}`}>{children}</div>
 );
@@ -29,7 +30,7 @@ const Home = () => {
 
         <section className="py-12 px-4 featureSection">
           <h2 className="text-3xl font-semibold text-center mb-8">Our Features</h2>
-          <div className="grid grid-cols-4 gap-4 test"> 
+          <div className="grid grid-cols-4 gap-4 test">
             <div className="relative w-full h-64 transform-style-preserve-3d hover:transition-transform duration-500 cursos">
               <div className="card w-full h-full rounded-2xl overflow-hidden">
                 <div
@@ -41,7 +42,7 @@ const Home = () => {
                   }}
                 ></div>
 
-             
+
                 <div className="card-back w-full h-full  text-white backface-hidden flex items-center justify-center rounded-2xl transform rotate-y-180 cardbgc">
                   <div className="text-center">
                     <h3 className="text-xl font-semibold">Task Management</h3>
@@ -120,10 +121,10 @@ const Home = () => {
               </div>
             </div>
           </div>
-          
+
         </section>
 
-        
+
         <section className="py-12 px-4 padd">
           <h2 className="text-3xl font-semibold text-center mb-8">Task Management</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -146,9 +147,8 @@ const Home = () => {
             ))}
           </div>
         </section>
-
-      {/* <Footer /> */}
       </div>
+      <Footer />
     </>
   );
 };
