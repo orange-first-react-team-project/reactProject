@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { getAuth, createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  GoogleAuthProvider, 
+  signInWithPopup 
+} from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
-import { firebaseConfig, auth } from './firebaseConfig'; // ✅ استيراد firebaseConfig
+import { firebaseConfig, auth } from './firebaseConfig'; 
+import { getDatabase, ref, set } from 'firebase/database'; // ✅ استيراد Realtime Database
 import './Register.css';
 import registerImage from './signUp.png';
 
@@ -15,7 +21,7 @@ function RegisterPage() {
     userType: 'user',
     agreeTerms: false
   });
-  
+
   const [errors, setErrors] = useState({
     email: '',
     password: '',
@@ -23,6 +29,7 @@ function RegisterPage() {
   });
 
   const navigate = useNavigate();
+  const database = getDatabase(); 
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,10 +39,7 @@ function RegisterPage() {
     }));
   };
 
-  // RegEx للتحقق من صحة البريد الإلكتروني
   const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-  // RegEx للتحقق من كلمة المرور (يجب أن تحتوي على رمز خاص)
   const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSubmit = async (e) => {
@@ -43,17 +47,12 @@ function RegisterPage() {
 
     let formErrors = {};
 
-    // التحقق من صحة البريد الإلكتروني باستخدام RegEx
     if (!emailRegEx.test(formData.email)) {
       formErrors.email = "Please enter a valid email address!";
     }
-
-    // التحقق من صحة كلمة المرور باستخدام RegEx (تتضمن رمزًا خاصًا)
     if (!passwordRegEx.test(formData.password)) {
       formErrors.password = "Password must be at least 8 characters long, contain at least one letter, one number, and one special character.";
     }
-
-    // التحقق من تطابق كلمة المرور
     if (formData.password !== formData.confirmPassword) {
       formErrors.confirmPassword = "Passwords do not match!";
     }
@@ -71,23 +70,20 @@ function RegisterPage() {
       );
       const user = userCredential.user;
 
-      // ننتظر حتى يتم التحقق من تسجيل الدخول بنجاح
       if (auth.currentUser) {
-        const userData = {
+        // هنا نقوم بتخزين بيانات المستخدم في "users/{user.uid}" مباشرة
+        const userRef = ref(database, `users/${user.uid}`);
+
+        await set(userRef, {
           username: formData.username,
           email: formData.email,
           userType: formData.userType
-        };
-
-        await axios.post(
-          `${firebaseConfig.databaseURL}/users/${user.uid}.json`,
-          userData
-        );
+        });
 
         alert("Registration successful!");
         console.log("User registered:", user);
-        sessionStorage.setItem("user", JSON.stringify(userData));
-        navigate('/');  // إعادة التوجيه إلى الصفحة الرئيسية
+        sessionStorage.setItem("user", JSON.stringify(formData));
+        navigate('/');  
       } else {
         throw new Error("User not logged in properly.");
       }
@@ -97,7 +93,6 @@ function RegisterPage() {
     }
   };
 
-  // Google sign-up handler
   const handleGoogleSignUp = async () => {
     const provider = new GoogleAuthProvider();
 
@@ -105,10 +100,19 @@ function RegisterPage() {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // ننتظر حتى يتم التحقق من تسجيل الدخول بنجاح
       if (auth.currentUser) {
+        // هنا نقوم بتخزين بيانات المستخدم في "users/{user.uid}" مباشرة
+        const userRef = ref(database, `users/${user.uid}`);
+
+        await set(userRef, {
+          username: user.displayName || "Google User",
+          email: user.email,
+          userType: "user",
+          profilePicture: user.photoURL || null
+        });
+
         sessionStorage.setItem("user", JSON.stringify(user));
-        navigate('/');  // إعادة التوجيه إلى الصفحة الرئيسية بعد تسجيل الدخول الناجح
+        navigate('/');  
       } else {
         throw new Error("User not logged in properly.");
       }
@@ -193,7 +197,6 @@ function RegisterPage() {
           <button type="submit">Sign Up</button>
         </form>
 
-        {/* Google Sign-up button */}
         <div className="google-signup-container">
           <span>Or sign up with</span>
           <div className="google-signup" onClick={handleGoogleSignUp}>
@@ -206,7 +209,7 @@ function RegisterPage() {
           </div>
         </div>
 
-        <p>Already have an account? <a href="/login">Sign in</a></p>
+        <p>Already have an account? <a className='signIn' href="/login">Sign in</a></p>
       </div>
       <div className="image-container">
         <img src={registerImage} alt="signUp-img" />
