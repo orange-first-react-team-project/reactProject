@@ -167,7 +167,7 @@ function RegisterPage() {
           </div>
         </div>
 
-        <p>Already have an account? <a href="/login">Sign in</a></p>
+        <p>Already have an account? <a href="/login" style={{color: "blue", textDecoration: "underline"}}>Sign in</a></p>
       </div>
       <div className="image-container">
         <img src={registerImage} alt="signUp-img" />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, signInWithEmailAndPassword } from '../Register/firebaseConfig';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
@@ -71,9 +71,6 @@ function Login() {
   };
 
   return (
-
-
-
     <div className="login-container">
       <div className="form-container">
         <h2>Sign In</h2>
@@ -126,13 +123,12 @@ function Login() {
           </div>
         </div>
 
-        <p>Don't have an account? <a href="/register">Create One</a></p>
+        <p>Don't have an account? <a href="/register" style={{color: "blue", textDecoration: "underline"}}>Create One</a></p>
       </div>
       <div className="image-container">
         <img src={loginImage} alt="Login" />
       </div>
     </div>
-
   );
 }
 
