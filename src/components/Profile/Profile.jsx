@@ -1,18 +1,7 @@
 import { Navbar } from '../exports'
 import "./profile.css"
 import { useState } from "react";
-// function Profile() {
-  
-//   return (
-//     <div>Profile</div>
-//   )
-// }
 
-// export default Profile
-
-
-// import React, { useState } from "react";
-// import "./userProfile.css"; // تأكد من وجود ملف الـ CSS
 
 const UserProfile = () => {
   // بيانات المستخدم الافتراضية
