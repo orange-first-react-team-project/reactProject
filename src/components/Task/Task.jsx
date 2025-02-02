@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { Navbar } from '../exports';
 import axios from "axios";
 import { app, firebaseConfig } from '../../firebaseConfig';
-
-const Task = ({ userId }) => {
+import { auth, onAuthStateChanged } from '../Register/firebaseConfig';
+const Task = () => {
   const [columns, setColumns] = useState({
     todo: { name: "📝 To Do", color: "bg-blue-100", tasks: [] },
     doing: { name: "⚙️ In Progress", color: "bg-yellow-100", tasks: [] },
@@ -18,16 +18,54 @@ const Task = ({ userId }) => {
     priority: "Low",
     status: "todo",
     deadline: "",
-    isDeleted: false // إضافة حقل isDeleted بشكل افتراضي
+    isDeleted: false,
+    userId: ""
   });
+  const [newColor, setNewcolor] = useState("red");
   const [searchQuery, setSearchQuery] = useState("");
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const [attachments, setAttachments] = useState([]);
   const [filterPriority, setFilterPriority] = useState("All");
+  const [userId, setUserId] = useState(null);
 
-  // جلب التاسكات من Firebase مع تصفية المهام المحذوفة
   useEffect(() => {
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) setUserId(user.uid);
+    });
+  }, []);
+  // useEffect(() => {
+  //   const fetchTasks = async () => {
+  //     try {
+  //       const response = await axios.get(`${firebaseConfig.databaseURL}/tasks.json`);
+  //       const tasks = response.data;
+
+  //       if (tasks) {
+  //         const updatedColumns = {
+  //           todo: { ...columns.todo, tasks: [] },
+  //           doing: { ...columns.doing, tasks: [] },
+  //           done: { ...columns.done, tasks: [] }
+  //         };
+
+  //         Object.keys(tasks).forEach((taskId) => {
+  //           const task = tasks[taskId];
+  //           if (!task.isDeleted) {
+  //             updatedColumns[task.status].tasks.push({ ...task, id: taskId });
+  //           }
+  //         });
+
+  //         setColumns(updatedColumns);
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching tasks:", error);
+  //     }
+  //   };
+
+  //   fetchTasks();
+  // }, []);
+  useEffect(() => {
+    if (!userId) return;
     const fetchTasks = async () => {
       try {
         const response = await axios.get(`${firebaseConfig.databaseURL}/tasks.json`);
@@ -42,7 +80,7 @@ const Task = ({ userId }) => {
 
           Object.keys(tasks).forEach((taskId) => {
             const task = tasks[taskId];
-            if (!task.isDeleted) {
+            if (!task.isDeleted && task.userId === userId) {
               updatedColumns[task.status].tasks.push({ ...task, id: taskId });
             }
           });
@@ -55,7 +93,7 @@ const Task = ({ userId }) => {
     };
 
     fetchTasks();
-  }, []);
+  }, [userId]);
 
   const handleSaveTask = async () => {
     if (newTask.title.trim() === "") return;
@@ -80,6 +118,7 @@ const Task = ({ userId }) => {
         const response = await axios.post(`${firebaseConfig.databaseURL}/tasks.json`, taskWithDeletedField);
         const taskId = response.data.name;
 
+
         setColumns(prevColumns => ({
           ...prevColumns,
           todo: { ...prevColumns.todo, tasks: [...prevColumns.todo.tasks, { ...taskWithDeletedField, id: taskId }] }
@@ -87,19 +126,19 @@ const Task = ({ userId }) => {
       }
 
       setShowModal(false);
-      setNewTask({ title: "", description: "", priority: "Low", status: "todo", deadline: "", isDeleted: false });
+      setNewTask({ title: "", description: "", priority: "Low", status: "todo", deadline: "", isDeleted: false, userId: "" });
     } catch (error) {
       console.error("Error saving task:", error);
     }
   };
   const handleDeleteTask = async (columnId, taskId) => {
     try {
-      // تحديث المهمة بوضع isDeleted = true
+
       await axios.patch(`${firebaseConfig.databaseURL}/tasks/${taskId}.json`, {
         isDeleted: true,
       });
 
-      // تحديث الحالة المحلية لإزالة المهمة من العرض
+      //عشان نشيل المهمة من العامود بعد الحذف
       setColumns((prevColumns) => ({
         ...prevColumns,
         [columnId]: {
@@ -140,7 +179,7 @@ const Task = ({ userId }) => {
     }
   };
 
-  // فتح نافذة إنشاء/تحرير التاسك
+
   const openModal = (task = null) => {
     if (task) {
       setIsEditing(true);
@@ -148,18 +187,20 @@ const Task = ({ userId }) => {
       setNewTask(task);
     } else {
       setIsEditing(false);
-      setNewTask({ title: "", description: "", priority: "Low", status: "todo", deadline: "", isDeleted: false });
+      // const responsee =  axios.get(`${firebaseConfig.databaseURL}/users/${}.json`);
+      // const taskk = response.data;
+      setNewTask({ title: "", description: "", priority: "Low", status: "todo", deadline: "", isDeleted: false, userId });
     }
     setShowModal(true);
   };
 
-  // فتح نافذة تفاصيل التاسك
+
   const openDetailModal = (task) => {
     setSelectedTask(task);
     setShowDetailModal(true);
   };
 
-  // تصفية التاسكات حسب البحث والأولوية
+
   const filterTasks = (tasks) => {
     return tasks.filter((task) => {
       const matchesSearch = task.title.toLowerCase().includes(searchQuery.toLowerCase());
@@ -223,9 +264,9 @@ const Task = ({ userId }) => {
               <textarea placeholder="Description" className="w-full border p-2 mt-3 rounded-lg" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}></textarea>
 
               <select className="w-full border p-2 mt-3 rounded-lg" value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}>
-                <option value="Low">Low</option>
-                <option value="Medium">Medium</option>
-                <option value="High">High</option>
+                <option className="lw" value="Low">Low</option>
+                <option className="md" value="Medium">Medium</option>
+                <option className="hg" value="High">High</option>
               </select>
 
               <input type="date" className="w-full border p-2 mt-3 rounded-lg" value={newTask.deadline} onChange={(e) => setNewTask({ ...newTask, deadline: e.target.value })} />
@@ -248,7 +289,7 @@ const Task = ({ userId }) => {
 
               <h3 className="font-bold mt-3">{selectedTask?.title}</h3>
               <p className="text-sm text-gray-600">{selectedTask?.description}</p>
-              <p className="text-xs text-red-500">Priority: {selectedTask?.priority}</p>
+              <p className="text-xs text-gray-950">Priority: {selectedTask?.priority}</p>
               <p className="text-xs text-gray-500">Deadline: {selectedTask?.deadline}</p>
               <div className="mt-4">
                 <h4 className="font-semibold">Attachments</h4>
@@ -296,7 +337,7 @@ const Task = ({ userId }) => {
                       {task.title}
                     </h3>
                     <p className="text-sm text-gray-600">{task.description}</p>
-                    <p className="text-xs text-red-500">Priority: {task.priority}</p>
+                    <p className="text-xs text-r-gray-950">Priority: {task.priority}</p>
                     <p className="text-xs text-gray-500">Deadline: {task.deadline}</p>
                     <select
                       className="w-full border p-2 mt-2 rounded-lg bg-gray-100"
