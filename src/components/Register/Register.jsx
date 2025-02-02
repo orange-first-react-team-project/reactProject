@@ -74,11 +74,28 @@ function RegisterPage() {
         // هنا نقوم بتخزين بيانات المستخدم في "users/{user.uid}" مباشرة
         const userRef = ref(database, `users/${user.uid}`);
 
+<<<<<<< HEAD
         await set(userRef, {
           username: formData.username,
           email: formData.email,
           userType: formData.userType
         });
+=======
+      // ✅ استخدام firebaseConfig.databaseURL بدلاً من app.options.databaseURL
+      await axios.put(
+        `${firebaseConfig.databaseURL}/users/${user.uid}.json`,
+        {
+          username: formData.username,
+          email: formData.email,
+          userType: formData.userType
+        }
+      );
+
+
+      sessionStorage.setItem("user", JSON.stringify(userData));
+      alert("Registration successful!");
+      console.log("User registered:", user);
+>>>>>>> 0ae1c8f2822219e7b8d9f5dc9724e6b7be4b134b
 
         alert("Registration successful!");
         console.log("User registered:", user);
@@ -209,7 +226,11 @@ function RegisterPage() {
           </div>
         </div>
 
+<<<<<<< HEAD
         <p>Already have an account? <a className='signIn' href="/login">Sign in</a></p>
+=======
+        <p>Already have an account? <a href="/login" style={{ color: "blue", textDecoration: "underline" }}>Sign in</a></p>
+>>>>>>> 0ae1c8f2822219e7b8d9f5dc9724e6b7be4b134b
       </div>
       <div className="image-container">
         <img src={registerImage} alt="signUp-img" />
