@@ -20,12 +20,12 @@ function Navbar() {
 
       <div className="mb-2 p-4">
         <Typography variant="h5" color="blue-gray" className="text-white">
-          <Link to='/'>To-Do List</Link>
+          <Link to="/">To-Do List</Link>
         </Typography>
       </div>
       <List className="flex flex-row gap-6 items-center hidden md:flex">
         <ListItem className="flex items-center">
-          <Link to='/task' className="flex items-center text-white">
+          <Link to="/task" className="flex items-center text-white">
             <ListItemPrefix>
               <Assignment className="h-5 w-5" />
             </ListItemPrefix>
@@ -34,7 +34,7 @@ function Navbar() {
         </ListItem>
 
         <ListItem className="flex items-center">
-          <Link to='/dashboard' className="flex items-center text-white">
+          <Link to="/dashboard" className="flex items-center text-white">
             <ListItemPrefix>
               <Dashboard className="h-5 w-5" />
             </ListItemPrefix>
@@ -43,7 +43,7 @@ function Navbar() {
         </ListItem>
 
         <ListItem className="flex items-center">
-          <Link to='/articles' className="flex items-center text-white">
+          <Link to="/articles" className="flex items-center text-white">
             <ListItemPrefix>
               <Article className="h-5 w-5" />
             </ListItemPrefix>
@@ -52,7 +52,7 @@ function Navbar() {
         </ListItem>
 
         <ListItem className="flex items-center">
-          <Link to='/profile' className="flex items-center text-white">
+          <Link to="/profile" className="flex items-center text-white">
             <ListItemPrefix>
               <UserCircleIcon className="h-5 w-5" />
             </ListItemPrefix>
@@ -61,7 +61,7 @@ function Navbar() {
         </ListItem>
 
         <ListItem className="flex items-center min-w-[150px]">
-          <Link to='/logout' className="flex items-center text-white">
+          <Link to="/logout" className="flex items-center text-white">
             <ListItemPrefix>
               <PowerIcon className="h-5 w-5" />
             </ListItemPrefix>
@@ -74,31 +74,36 @@ function Navbar() {
       <div className="md:hidden">
         <List className="flex flex-row gap-4 items-center">
           <ListItem className="flex items-center">
-            <Link to='/task' className="text-white">
+            <Link to="/task" className="text-white">
               Task
             </Link>
           </ListItem>
           <ListItem className="flex items-center">
-            <Link to='/dashboard' className="text-white">
+            <Link to="/dashboard" className="text-white">
               Dashboard
             </Link>
           </ListItem>
           <ListItem className="flex items-center">
-            <Link to='/articles' className="text-white">
+            <Link to="/articles" className="text-white">
               Articles
             </Link>
           </ListItem>
           <ListItem className="flex items-center">
-            <Link to='/profile' className="text-white">
+            <Link to="/profile" className="text-white">
               Profile
             </Link>
           </ListItem>
           <ListItem className="flex items-center">
-            <Link to='/logout' className="text-white">
+            <Link to="/logout" className="text-white">
               Log Out
             </Link>
           </ListItem>
         </List>
+        <ListItem className="flex items-center">
+          <Link to="/contact" className="text-white">
+            Contact
+          </Link>
+        </ListItem>
       </div>
     </Card>
   );
