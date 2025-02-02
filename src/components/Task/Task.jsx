@@ -3,10 +3,11 @@ import { Navbar } from '../exports';
 import axios from "axios";
 import { app, firebaseConfig } from '../../firebaseConfig';
 import { auth, onAuthStateChanged } from '../Register/firebaseConfig';
+
 const Task = () => {
   const [columns, setColumns] = useState({
     todo: { name: "📝 To Do", color: "bg-blue-100", tasks: [] },
-    doing: { name: "⚙️ In Progress", color: "bg-yellow-100", tasks: [] },
+    doing: { name: "⚙️ In Progress", color: "bg-yellow-100 ", tasks: [] },
     done: { name: "✅ Done", color: "bg-green-100", tasks: [] }
   });
   const [showModal, setShowModal] = useState(false);
@@ -327,7 +328,7 @@ const Task = () => {
             const filteredTasks = filterTasks(column.tasks);
             return (
               <div key={columnId} className={`p-4 rounded-lg shadow-md ${column.color}`}>
-                <h2 className="text-lg font-semibold mb-3">{column.name}</h2>
+                <h2 style={{ color: "black" }} className="text-lg font-semibold mb-3 ">{column.name}</h2>
                 {filteredTasks.map((task) => (
                   <div key={task.id} className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition mb-3">
                     <h3
@@ -337,7 +338,16 @@ const Task = () => {
                       {task.title}
                     </h3>
                     <p className="text-sm text-gray-600">{task.description}</p>
-                    <p className="text-xs text-r-gray-950">Priority: {task.priority}</p>
+                    {/* <p className="text-xs text-r-gray-950">Priority: {task.priority}</p> */}
+                    <p className="text-xs">
+                      Priority: <span className={
+                        task.priority === "Low" ? "text-blue-600 font-semibold" :
+                          task.priority === "Medium" ? "text-orange-600 font-semibold" :
+                            "text-red-600 font-semibold"
+                      }>
+                        {task.priority}
+                      </span>
+                    </p>
                     <p className="text-xs text-gray-500">Deadline: {task.deadline}</p>
                     <select
                       className="w-full border p-2 mt-2 rounded-lg bg-gray-100"
