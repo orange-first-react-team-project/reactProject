@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Navbar } from "../exports";
 import "../Articles/Articles.css";
+import Footer from '../Footer/Footer'
+
 
 import html2canvas from "html2canvas";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
@@ -493,37 +495,41 @@ const Quiz = () => {
   };
 
   return (
-    <div className="quiz-container">
-      <h1>Time Management Quiz</h1>
+    <>
+      <div className="quiz-container">
+        <h1>Time Management Quiz</h1>
 
-      {showResult ? (
-        <div className="result">
-          <h2>
-            Your Score: {score} out of {questions.length}
-          </h2>
-        </div>
-      ) : (
-        <div className="question-container">
-          <h2>{questions[currentQuestionIndex].question}</h2>
-          <div className="options-container">
-            {questions[currentQuestionIndex].options.map((option, index) => (
-              <button
-                key={index}
-                onClick={() => handleAnswerSelection(option)}
-                className={`option-btn ${
-                  selectedAnswer === option ? "selected" : ""
-                }`}
-              >
-                {option}
-              </button>
-            ))}
+        {showResult ? (
+          <div className="result">
+            <h2>
+              Your Score: {score} out of {questions.length}
+            </h2>
           </div>
-          <button onClick={handleSubmitAnswer} className="submit-btn">
-            Next
-          </button>
-        </div>
-      )}
-    </div>
+        ) : (
+          <div className="question-container">
+            <h2>{questions[currentQuestionIndex].question}</h2>
+            <div className="options-container">
+              {questions[currentQuestionIndex].options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleAnswerSelection(option)}
+                  className={`option-btn ${selectedAnswer === option ? "selected" : ""
+                    }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+            <button onClick={handleSubmitAnswer} className="submit-btn">
+              Next
+            </button>
+          </div>
+        )}
+
+      </div>
+
+    </>
+
   );
 };
 
