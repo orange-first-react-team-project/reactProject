@@ -1,12 +1,6 @@
 import { initializeApp } from "firebase/app";
-<<<<<<< HEAD
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { getDatabase } from "firebase/database"; 
-=======
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-
-// Your web app's Firebase configuration
->>>>>>> 0ae1c8f2822219e7b8d9f5dc9724e6b7be4b134b
+import { getDatabase } from "firebase/database"; 
 const firebaseConfig = {
   apiKey: "AIzaSyCeyC9wj45JuW6xaCoIPRyRZKFGGr-GiOs",
   authDomain: "react-team-project-e3fab.firebaseapp.com",
@@ -21,12 +15,4 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app); 
 
-<<<<<<< HEAD
-export { app, auth, firebaseConfig, createUserWithEmailAndPassword, signInWithEmailAndPassword, database };
-=======
-// Export everything as a default object
-// export {app,auth};
-// export {createUserWithEmailAndPassword, signInWithEmailAndPassword };
-// export { firebaseConfig };
-export { app, auth, firebaseConfig, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged };
->>>>>>> 0ae1c8f2822219e7b8d9f5dc9724e6b7be4b134b
+export { app, auth, firebaseConfig, createUserWithEmailAndPassword, signInWithEmailAndPassword, database, onAuthStateChanged };

@@ -131,13 +131,7 @@ function Login() {
             />
           </div>
         </div>
-<<<<<<< HEAD
-        
         <p>Don't have an account? <a className='signUp' href="/register">Create One</a></p>
-=======
-
-        <p>Don't have an account? <a href="/register" style={{color: "blue", textDecoration: "underline"}}>Create One</a></p>
->>>>>>> 0ae1c8f2822219e7b8d9f5dc9724e6b7be4b134b
       </div>
       <div className="image-container">
         <img src={loginImage} alt="Login" />
