@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, signInWithEmailAndPassword } from '../Register/firebaseConfig';
+import { auth, signInWithEmailAndPassword, database } from '../Register/firebaseConfig';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { ref, get, set } from 'firebase/database';
 import loginImage from './login.png';
 import './Login.css';
 
@@ -25,45 +26,54 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        formData.email,
-        formData.password
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
       const user = userCredential.user;
-
+      
+      const userData = {
+        username: user.displayName || 'User',
+        email: user.email,
+        uid: user.uid,
+      };
+      
       if (formData.rememberMe) {
-        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(userData));
       } else {
-        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('user', JSON.stringify(userData));
       }
-
-      navigate('/'); // التوجيه إلى الصفحة الرئيسية أو اللوحة بعد تسجيل الدخول
+      
+      navigate('/');
     } catch (error) {
       setError("Invalid email or password.");
       console.error("Error during login:", error);
     }
   };
 
-  // **تسجيل الدخول بواسطة Google**
   const handleGoogleSignIn = async () => {
     const provider = new GoogleAuthProvider();
-
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-
+      
+      const userRef = ref(database, `users/${user.uid}/${user.uid}`);
+      const snapshot = await get(userRef);
+      
+      if (!snapshot.exists()) {
+        await set(userRef, {
+          username: user.displayName || 'User',
+          email: user.email,
+          uid: user.uid,
+        });
+      }
+      
       const userData = {
         username: user.displayName || 'User',
         email: user.email,
         uid: user.uid,
       };
-
+      
       sessionStorage.setItem("userData", JSON.stringify(userData));
-      navigate('/'); // توجيه المستخدم بعد تسجيل الدخول الناجح
-
+      navigate('/');
     } catch (error) {
       console.error("Google Sign-In Error:", error);
       setError("Failed to sign in with Google.");
@@ -109,8 +119,7 @@ function Login() {
           {error && <p className="error-message">{error}</p>}
           <button type="submit">Login</button>
         </form>
-
-        {/* تسجيل الدخول بواسطة جوجل */}
+        
         <div className="google-signin-container">
           <span>Or sign in with</span>
           <div className="google-signin" onClick={handleGoogleSignIn}>
@@ -122,8 +131,7 @@ function Login() {
             />
           </div>
         </div>
-
-        <p>Don't have an account? <a href="/register" style={{color: "blue", textDecoration: "underline"}}>Create One</a></p>
+        <p>Don't have an account? <a className='signUp' href="/register">Create One</a></p>
       </div>
       <div className="image-container">
         <img src={loginImage} alt="Login" />
