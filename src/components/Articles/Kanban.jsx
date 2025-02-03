@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Navbar } from "../exports";
 import "../Articles/Articles.css";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
+import Footer from "../Footer/Footer";
 
 // بيانات الأعمدة والبطاقات
 const initialColumns = {
@@ -68,6 +69,7 @@ function Kanban() {
           ))}
         </div>
       </div>
+      <Footer />
     </>
   );
 }

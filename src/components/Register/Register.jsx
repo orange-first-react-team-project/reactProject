@@ -80,9 +80,14 @@ function RegisterPage() {
           userType: formData.userType
         });
 
+        // إضافة الـ UID إلى formData قبل تخزينها في sessionStorage
+        const userWithUID = { ...formData, uid: user.uid };
+
         alert("Registration successful!");
         console.log("User registered:", user);
-        sessionStorage.setItem("user", JSON.stringify(formData));
+        
+        // تخزين بيانات المستخدم مع الـ UID في sessionStorage
+        sessionStorage.setItem("user", JSON.stringify(userWithUID));
         navigate('/');  
       } else {
         throw new Error("User not logged in properly.");
@@ -111,7 +116,9 @@ function RegisterPage() {
           profilePicture: user.photoURL || null
         });
 
+        // تخزين بيانات المستخدم مع الـ UID في sessionStorage
         sessionStorage.setItem("user", JSON.stringify(user));
+
         navigate('/');  
       } else {
         throw new Error("User not logged in properly.");

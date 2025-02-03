@@ -3,10 +3,12 @@ import { Navbar } from '../exports';
 import axios from "axios";
 import { app, firebaseConfig } from '../../firebaseConfig';
 import { auth, onAuthStateChanged } from '../Register/firebaseConfig';
+import Footer from "../Footer/Footer";
+
 const Task = () => {
   const [columns, setColumns] = useState({
     todo: { name: "📝 To Do", color: "bg-blue-100", tasks: [] },
-    doing: { name: "⚙️ In Progress", color: "bg-yellow-100", tasks: [] },
+    doing: { name: "⚙️ In Progress", color: "bg-yellow-100 ", tasks: [] },
     done: { name: "✅ Done", color: "bg-green-100", tasks: [] }
   });
   const [showModal, setShowModal] = useState(false);
@@ -210,173 +212,293 @@ const Task = () => {
   };
 
   return (
-    <div>
-      <Navbar />
-      <div className="container mx-auto p-6">
-        <input
-          type="text"
-          placeholder="Search by Title..."
-          className="w-full border p-2 mt-3 rounded-lg mb-6"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
+    <>
+      <div>
+        <Navbar />
+        <div className="container mx-auto p-6">
+          <input
+            type="text"
+            placeholder="Search by Title..."
+            className="w-full border p-2 mt-3 rounded-lg mb-6"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
 
-        <div className="flex space-x-2 mb-6">
-          <button
-            onClick={() => setFilterPriority("All")}
-            className={`px-4 py-2 rounded-lg ${filterPriority === "All" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-          >
-            All
-          </button>
-          <button
-            onClick={() => setFilterPriority("Low")}
-            className={`px-4 py-2 rounded-lg ${filterPriority === "Low" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-          >
-            Low
-          </button>
-          <button
-            onClick={() => setFilterPriority("Medium")}
-            className={`px-4 py-2 rounded-lg ${filterPriority === "Medium" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-          >
-            Medium
-          </button>
-          <button
-            onClick={() => setFilterPriority("High")}
-            className={`px-4 py-2 rounded-lg ${filterPriority === "High" ? "bg-blue-600 text-white" : "bg-gray-200"}`}
-          >
-            High
-          </button>
-        </div>
-
-        <button onClick={() => openModal()} className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition">
-          ➕ Create Task
-        </button>
-
-        {showModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold">{isEditing ? "Edit Task" : "Create New Task"}</h2>
-                <button onClick={() => setShowModal(false)} className="text-gray-500 hover:text-red-500">✖</button>
-              </div>
-
-              <input type="text" placeholder="Title" className="w-full border p-2 mt-3 rounded-lg" value={newTask.title} onChange={(e) => setNewTask({ ...newTask, title: e.target.value })} />
-              <textarea placeholder="Description" className="w-full border p-2 mt-3 rounded-lg" value={newTask.description} onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}></textarea>
-
-              <select className="w-full border p-2 mt-3 rounded-lg" value={newTask.priority} onChange={(e) => setNewTask({ ...newTask, priority: e.target.value })}>
-                <option className="lw" value="Low">Low</option>
-                <option className="md" value="Medium">Medium</option>
-                <option className="hg" value="High">High</option>
-              </select>
-
-              <input type="date" className="w-full border p-2 mt-3 rounded-lg" value={newTask.deadline} onChange={(e) => setNewTask({ ...newTask, deadline: e.target.value })} />
-
-              <div className="flex justify-between mt-4">
-                <button onClick={() => setShowModal(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg">Cancel</button>
-                <button onClick={handleSaveTask} className="bg-green-500 text-white px-4 py-2 rounded-lg">{isEditing ? "Update" : "Add"}</button>
-              </div>
-            </div>
+          <div className="flex space-x-2 mb-6">
+            <button
+              onClick={() => setFilterPriority("All")}
+              className={`px-4 py-2 rounded-lg ${
+                filterPriority === "All"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              All
+            </button>
+            <button
+              onClick={() => setFilterPriority("Low")}
+              className={`px-4 py-2 rounded-lg ${
+                filterPriority === "Low"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              Low
+            </button>
+            <button
+              onClick={() => setFilterPriority("Medium")}
+              className={`px-4 py-2 rounded-lg ${
+                filterPriority === "Medium"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              Medium
+            </button>
+            <button
+              onClick={() => setFilterPriority("High")}
+              className={`px-4 py-2 rounded-lg ${
+                filterPriority === "High"
+                  ? "bg-blue-600 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              High
+            </button>
           </div>
-        )}
 
-        {showDetailModal && selectedTask && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold">Task Details</h2>
-                <button onClick={() => setShowDetailModal(false)} className="text-gray-500 hover:text-red-500">✖</button>
-              </div>
+          <button
+            onClick={() => openModal()}
+            className="bg-blue-600 text-white px-5 py-2 rounded-lg shadow-md hover:bg-blue-700 transition"
+          >
+            ➕ Create Task
+          </button>
 
-              <h3 className="font-bold mt-3">{selectedTask?.title}</h3>
-              <p className="text-sm text-gray-600">{selectedTask?.description}</p>
-              <p className="text-xs text-gray-950">Priority: {selectedTask?.priority}</p>
-              <p className="text-xs text-gray-500">Deadline: {selectedTask?.deadline}</p>
-              <div className="mt-4">
-                <h4 className="font-semibold">Attachments</h4>
-                {attachments.map((attachment, index) => (
-                  <div key={index} className="text-sm text-gray-600">
-                    <a
-                      href={attachment.url}
-                      download={attachment.name}
-                      className="text-blue-500 hover:underline"
-                    >
-                      {attachment.name}
-                    </a>
-                  </div>
-                ))}
-              </div>
+          {showModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-bold">
+                    {isEditing ? "Edit Task" : "Create New Task"}
+                  </h2>
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="text-gray-500 hover:text-red-500"
+                  >
+                    ✖
+                  </button>
+                </div>
 
-              <div className="mt-4">
                 <input
-                  type="file"
-                  onChange={(e) => handleAddAttachment(e.target.files[0])}
-                  className="w-full border p-2 rounded-lg"
+                  type="text"
+                  placeholder="Title"
+                  className="w-full border p-2 mt-3 rounded-lg"
+                  value={newTask.title}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, title: e.target.value })
+                  }
                 />
-              </div>
+                <textarea
+                  placeholder="Description"
+                  className="w-full border p-2 mt-3 rounded-lg"
+                  value={newTask.description}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, description: e.target.value })
+                  }
+                ></textarea>
 
-              <div className="flex justify-end mt-4">
-                <button onClick={() => setShowDetailModal(false)} className="bg-red-500 text-white px-4 py-2 rounded-lg">Close</button>
+                <select
+                  className="w-full border p-2 mt-3 rounded-lg"
+                  value={newTask.priority}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, priority: e.target.value })
+                  }
+                >
+                  <option className="lw" value="Low">
+                    Low
+                  </option>
+                  <option className="md" value="Medium">
+                    Medium
+                  </option>
+                  <option className="hg" value="High">
+                    High
+                  </option>
+                </select>
+
+                <input
+                  type="date"
+                  className="w-full border p-2 mt-3 rounded-lg"
+                  value={newTask.deadline}
+                  onChange={(e) =>
+                    setNewTask({ ...newTask, deadline: e.target.value })
+                  }
+                />
+
+                <div className="flex justify-between mt-4">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleSaveTask}
+                    className="bg-green-500 text-white px-4 py-2 rounded-lg"
+                  >
+                    {isEditing ? "Update" : "Add"}
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <div className="grid grid-cols-3 gap-6 mt-6">
-          {Object.keys(columns).map((columnId) => {
-            const column = columns[columnId];
-            const filteredTasks = filterTasks(column.tasks);
-            return (
-              <div key={columnId} className={`p-4 rounded-lg shadow-md ${column.color}`}>
-                <h2 className="text-lg font-semibold mb-3">{column.name}</h2>
-                {filteredTasks.map((task) => (
-                  <div key={task.id} className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition mb-3">
-                    <h3
-                      className="font-bold cursor-pointer hover:text-blue-600"
-                      onClick={() => openDetailModal(task)}
-                    >
-                      {task.title}
-                    </h3>
-                    <p className="text-sm text-gray-600">{task.description}</p>
-                    <p className="text-xs text-r-gray-950">Priority: {task.priority}</p>
-                    <p className="text-xs text-gray-500">Deadline: {task.deadline}</p>
-                    <select
-                      className="w-full border p-2 mt-2 rounded-lg bg-gray-100"
-                      value={task.status}
-                      onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                    >
-                      <option value="todo">To Do</option>
-                      <option value="doing">Doing</option>
-                      <option value="done">Done</option>
-                    </select>
+          {showDetailModal && selectedTask && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-xl font-bold">Task Details</h2>
+                  <button
+                    onClick={() => setShowDetailModal(false)}
+                    className="text-gray-500 hover:text-red-500"
+                  >
+                    ✖
+                  </button>
+                </div>
 
-                    <div className="flex justify-end space-x-2 mt-2">
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          openModal(task);
-                        }}
-                        className="bg-yellow-500 text-white px-3 py-1 rounded-lg"
+                <h3 className="font-bold mt-3">{selectedTask?.title}</h3>
+                <p className="text-sm text-gray-600">
+                  {selectedTask?.description}
+                </p>
+                <p className="text-xs text-gray-950">
+                  Priority: {selectedTask?.priority}
+                </p>
+                <p className="text-xs text-gray-500">
+                  Deadline: {selectedTask?.deadline}
+                </p>
+                <div className="mt-4">
+                  <h4 className="font-semibold">Attachments</h4>
+                  {attachments.map((attachment, index) => (
+                    <div key={index} className="text-sm text-gray-600">
+                      <a
+                        href={attachment.url}
+                        download={attachment.name}
+                        className="text-blue-500 hover:underline"
                       >
-                        Edit
-                      </button>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteTask(columnId, task.id);
-                        }}
-                        className="bg-red-500 text-white px-3 py-1 rounded-lg"
-                      >
-                        Delete
-                      </button>
+                        {attachment.name}
+                      </a>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+
+                <div className="mt-4">
+                  <input
+                    type="file"
+                    onChange={(e) => handleAddAttachment(e.target.files[0])}
+                    className="w-full border p-2 rounded-lg"
+                  />
+                </div>
+
+                <div className="flex justify-end mt-4">
+                  <button
+                    onClick={() => setShowDetailModal(false)}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
-            );
-          })}
+            </div>
+          )}
+
+          <div className="grid grid-cols-3 gap-6 mt-6">
+            {Object.keys(columns).map((columnId) => {
+              const column = columns[columnId];
+              const filteredTasks = filterTasks(column.tasks);
+              return (
+                <div
+                  key={columnId}
+                  className={`p-4 rounded-lg shadow-md ${column.color}`}
+                >
+                  <h2
+                    style={{ color: "black" }}
+                    className="text-lg font-semibold mb-3 "
+                  >
+                    {column.name}
+                  </h2>
+                  {filteredTasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="bg-white p-3 rounded-lg shadow hover:shadow-lg transition mb-3"
+                    >
+                      <h3
+                        className="font-bold cursor-pointer hover:text-blue-600"
+                        onClick={() => openDetailModal(task)}
+                      >
+                        {task.title}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {task.description}
+                      </p>
+                      {/* <p className="text-xs text-r-gray-950">Priority: {task.priority}</p> */}
+                      <p className="text-xs">
+                        Priority:{" "}
+                        <span
+                          className={
+                            task.priority === "Low"
+                              ? "text-blue-600 font-semibold"
+                              : task.priority === "Medium"
+                              ? "text-orange-600 font-semibold"
+                              : "text-red-600 font-semibold"
+                          }
+                        >
+                          {task.priority}
+                        </span>
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Deadline: {task.deadline}
+                      </p>
+                      <select
+                        className="w-full border p-2 mt-2 rounded-lg bg-gray-100"
+                        value={task.status}
+                        onChange={(e) =>
+                          handleStatusChange(task.id, e.target.value)
+                        }
+                      >
+                        <option value="todo">To Do</option>
+                        <option value="doing">Doing</option>
+                        <option value="done">Done</option>
+                      </select>
+
+                      <div className="flex justify-end space-x-2 mt-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openModal(task);
+                          }}
+                          className="bg-yellow-500 text-white px-3 py-1 rounded-lg"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteTask(columnId, task.id);
+                          }}
+                          className="bg-red-500 text-white px-3 py-1 rounded-lg"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

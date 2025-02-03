@@ -16,9 +16,8 @@ const useUserType = () => {
                 onValue(userRef, (snapshot) => {
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
-                        const firstKey = Object.keys(userData)[0];
-                        if (firstKey && userData[firstKey].userType) {
-                            setUserType(userData[firstKey].userType);
+                        if (userData.userType) {
+                            setUserType(userData.userType);
                         } else {
                             setUserType(null);
                         }

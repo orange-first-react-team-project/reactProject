@@ -1,8 +1,3 @@
-.trans {
-    background-color: #00000042;
-    object-fit: cover !important;
-}
-
 @import "https://fonts.googleapis.com/css?family=Josefin+Sans:400,700";
 
 body {
@@ -17,79 +12,70 @@ a {
     text-decoration: none;
 }
 
+.featureSection {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.feature-col {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    width: 90%;
+    max-width: 1200px;
+}
+
 .card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 400px;
-    width: 300px;
-    transform: translate(-50%, -50%);
+    position: relative;
+    height: 300px;
+    width: 100%;
     transform-style: preserve-3d;
-    perspective: 600px;
-    transition: .5s;
+    perspective: 1000px;
+    transition: transform 0.5s;
+    cursor: pointer;
+    background-color: #f2efe7 !important;
 }
 
-.card:hover .card-front {
-    transform: rotateX(-180deg);
-}
-
-.card:hover .card-back {
-    transform: rotateX(0deg);
+.card-front,
+.card-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.5s;
 }
 
 .card-front {
-    height: 100%;
-    width: 100%;
-    background-image: url(https://99px.ru/sstorage/56/2013/12/image_563012130153328414049.jpg);
-    background-position: 50% 50%;
+    transform: rotateY(0deg);
+    background-position: center;
     background-size: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #000000;
-    backface-visibility: hidden;
-    transform: rotateX(0deg);
-    transition: .5s;
 }
 
 .card-back {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-color: #000000;
-    backface-visibility: hidden;
-    transform: rotateX(180deg);
-    transition: .5s;
+    transform: rotateY(180deg);
+    background-color: #48A6A7;
     color: #ffffff;
     text-align: center;
 }
 
-.card-back h2 {
-    margin: 60% auto 35% auto;
-    font-size: 26px;
+.card:hover .card-front {
+    transform: rotateY(180deg);
 }
 
-.card-back span {
-    font-size: 20px;
+.card:hover .card-back {
+    transform: rotateY(0deg);
 }
 
-.card-back a {
-    height: 20px;
-    width: 20px;
-    padding: 5px 5px;
-    border-radius: 4px;
-    line-height: 20px;
-}
-
-.card-back a:hover {
-    color: #000000;
-    background-color: #fff;
-}
-
-.test {
-    margin-top: 150px;
+.trans {
+    background-color: #00000042;
+    object-fit: cover !important;
 }
 
 .cardbgc {
@@ -100,13 +86,46 @@ a {
     cursor: pointer;
 }
 
-.featureSection {
-    background-color: #F2EFE7;
-    height: 100vh;
-    box-shadow: inset 0px -6px 10px 6px rgba(39, 39, 39, 0.15);
-}
-
 .padd {
     padding-top: 90px;
     background-color: #fff;
+}
+
+.BTN {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.BTN a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2973b2;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.BTN a:hover {
+    background-color: #2972B28E;
+}
+
+@media (max-width: 768px) {
+    .feature-col {
+        grid-template-columns: 1fr;
+    }
+
+    .featureSection {
+        height: auto;
+    }
+}
+
+.adddd {
+    background-color: #F2EFE7;
+    padding: 25px;
+    box-shadow: inset 0px -6px 10px 6px rgba(39, 39, 39, 0.15);
+}
+
+.titlec {
+    color: black;
 }

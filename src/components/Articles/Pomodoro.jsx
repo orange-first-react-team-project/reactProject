@@ -1,6 +1,7 @@
 import React from "react";
 import { Navbar } from "../exports";
 import "../Articles/Articles.css";
+import Footer from "../Footer/Footer";
 
 function Pomodoro() {
   return (
@@ -8,8 +9,6 @@ function Pomodoro() {
       <Navbar />
       <div className="pomodoro-container">
         <h1 className="pomodoro-title">🍅 Pomodoro Technique</h1>
-
-       
 
         <p className="pomodoro-description">
           **Pomodoro Technique** is a time management method that helps you
@@ -28,6 +27,7 @@ function Pomodoro() {
           </li>
         </ol>
       </div>
+      <Footer />
     </>
   );
 }

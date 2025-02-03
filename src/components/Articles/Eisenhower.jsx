@@ -6,6 +6,7 @@ import html2canvas from "html2canvas";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
 
 
+import Footer from "../Footer/Footer";
 
 
 function Eisenhower() {
@@ -79,9 +80,11 @@ function Eisenhower() {
   /********************************************************************/
 
   return (
+
+<>
     <div className="App" style={{ background: "#F2EFE7" }}>
       <Navbar />
-      <h1 style={{ fontSize: "4rem" }}>The Eisenhower Matrix</h1>
+      <h1  style={{ fontSize: "4rem" }}>The Eisenhower Matrix</h1>
 
       <div
         style={{ background: "#F2EFE7" }}
@@ -277,7 +280,11 @@ function Eisenhower() {
         notificationSound={true}
         messageDelay={1}
       />
+      
     </div>
+    <Footer/>
+    </>
+
   );
 }
 

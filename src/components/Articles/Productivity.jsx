@@ -1,6 +1,8 @@
 import React from "react";
 import { Navbar } from "../exports";
 import "../Articles/Articles.css";
+import Footer from "../Footer/Footer";
+
 
 function ProductivityTechniques() {
   return (
@@ -12,7 +14,7 @@ function ProductivityTechniques() {
         {/* The Two-Minute Rule */}
         <div className="technique">
           <h2 className="technique-title">The Two-Minute Rule</h2>
-      
+
           <p className="technique-description">
             The Two-Minute Rule suggests that if a task takes two minutes or
             less to complete, do it immediately. This approach helps prevent
@@ -31,7 +33,7 @@ function ProductivityTechniques() {
         {/* The 5-Second Rule */}
         <div className="technique">
           <h2 className="technique-title">The 5-Second Rule</h2>
-        
+
           <p className="technique-description">
             The 5-Second Rule, popularized by Mel Robbins, encourages immediate
             action. When you feel the urge to do something, count backward from
@@ -49,6 +51,7 @@ function ProductivityTechniques() {
           </ul>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

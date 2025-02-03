@@ -3,6 +3,8 @@ import { Navbar } from "../exports";
 import "../Articles/Articles.css";
 import axios from "axios";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
+import Footer from "../Footer/Footer";
+
 
 // نموذج الاتصال
 function ContactForm() {
@@ -146,6 +148,9 @@ function ContactForm() {
         notificationSound={true}
         messageDelay={1}
       />
+
+<Footer/>
+
     </>
   );
 }
@@ -228,7 +233,8 @@ function Example() {
                 href={product.href}
                 className="relative group block rounded-lg shadow-lg overflow-hidden transition-transform transform hover:scale-105 bg-white"
               >
-                <div className="overflow-hidden rounded-t-lg">
+                <div className="overflow-hidden rounded-t-lg"> 
+                  
                   <img
                     src={product.imageSrc}
                     alt={product.imageAlt}
@@ -237,7 +243,7 @@ function Example() {
                 </div>
 
                 <div className="p-5">
-                  <h2 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
+                  <h2 style={{color:"black"}} className="text-lg font-semibold text-gray-900 group-hover:text-blue-600">
                     {product.name}
                   </h2>
                 </div>

@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import { getDatabase } from "firebase/database"; 
+import { getStorage } from "firebase/storage";
 const firebaseConfig = {
   apiKey: "AIzaSyCeyC9wj45JuW6xaCoIPRyRZKFGGr-GiOs",
   authDomain: "react-team-project-e3fab.firebaseapp.com",
@@ -14,5 +15,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app); 
+const storage = getStorage(app);
 
-export { app, auth, firebaseConfig, createUserWithEmailAndPassword, signInWithEmailAndPassword, database, onAuthStateChanged };
+export { app, auth, firebaseConfig, createUserWithEmailAndPassword, signInWithEmailAndPassword, database, onAuthStateChanged, storage };

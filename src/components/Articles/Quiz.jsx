@@ -2,6 +2,8 @@ import "../Articles/Articles.css";
 import { Navbar } from "../exports";
 import React, { useState} from "react";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
+import Footer from "../Footer/Footer";
+
 
 
 
@@ -112,6 +114,7 @@ function Quiz() {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 }

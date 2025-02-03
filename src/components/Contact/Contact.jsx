@@ -2,6 +2,9 @@ import { Navbar } from '../exports';
 import "./contact.css";
 import { useState } from "react";
 import axios from "axios";
+import Footer from "../Footer/Footer";
+
+
  function Contact() {
   const [data, setData] = useState ({
     name : "",
@@ -55,7 +58,10 @@ import axios from "axios";
                      data-original="#000000"
                    />
                  </svg>
-                 <a href="javascript:void(0)" className="text-white text-sm ml-4">
+                 <a
+                   href="javascript:void(0)"
+                   className="text-white text-sm ml-4"
+                 >
                    info@example.com
                  </a>
                </li>
@@ -72,7 +78,10 @@ import axios from "axios";
                      data-original="#000000"
                    ></path>
                  </svg>
-                 <a href="javascript:void(0)" className="text-white text-sm ml-4">
+                 <a
+                   href="javascript:void(0)"
+                   className="text-white text-sm ml-4"
+                 >
                    +158 996 888
                  </a>
                </li>
@@ -93,7 +102,10 @@ import axios from "axios";
                      data-original="#000000"
                    ></path>
                  </svg>
-                 <a href="javascript:void(0)" className="text-white text-sm ml-4">
+                 <a
+                   href="javascript:void(0)"
+                   className="text-white text-sm ml-4"
+                 >
                    123 Street 256 House
                  </a>
                </li>
@@ -213,6 +225,7 @@ import axios from "axios";
            </div>
          </div>
        </div>
+       <Footer />
      </>
    );
  }
