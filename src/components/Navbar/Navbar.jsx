@@ -6,27 +6,25 @@ import {
   ListItem,
   ListItemPrefix,
 } from "@material-tailwind/react";
-import { UserCircleIcon, PowerIcon } from "@heroicons/react/24/solid";
-
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { Assignment, Dashboard, Article } from "@mui/icons-material";
-
+import AuthButton from "./AuthButton";
 import useUserType from "./useUserType";
 
 function Navbar() {
-
   const userType = useUserType();
 
   return (
-    <Card className="flex flex-row items-center justify-between top-0 w-full p-1 shadow-xl shadow-blue-gray-900/5 bg-[#2973B2] rounded-none">
-      <div className="mb-2 p-4">
+    <Card className="flex flex-row items-center justify-between top-0 w-full p-3 shadow-xl shadow-blue-gray-900/5 bg-[#2973B2] rounded-none">
+      <div className="p-4">
         <Typography variant="h5" color="blue-gray" className="text-white">
           <Link to="/">To-Do List</Link>
         </Typography>
       </div>
-      <List className="flex flex-row gap-6 items-center hidden md:flex">
 
-        <Link to='/task' className="flex items-center text-white">
-          <ListItem className="flex items-center">
+      <List className="flex flex-row gap-6 items-center hidden md:flex">
+        <Link to="/task" className="flex items-center text-white">
+          <ListItem className="flex items-center hover:bg-blue-500/50 px-4 py-2 rounded-lg transition-all">
             <ListItemPrefix>
               <Assignment className="h-5 w-5" />
             </ListItemPrefix>
@@ -34,18 +32,19 @@ function Navbar() {
           </ListItem>
         </Link>
 
+        {userType === "admin" && (
+          <Link to="/dashboard" className="flex items-center text-white">
+            <ListItem className="flex items-center hover:bg-blue-500/50 px-4 py-2 rounded-lg transition-all">
+              <ListItemPrefix>
+                <Dashboard className="h-5 w-5" />
+              </ListItemPrefix>
+              <p>Dashboard</p>
+            </ListItem>
+          </Link>
+        )}
 
-        {userType === "admin" && <Link to='/dashboard' className="flex items-center text-white">
-          <ListItem className="flex items-center">
-            <ListItemPrefix>
-              <Dashboard className="h-5 w-5" />
-            </ListItemPrefix>
-            <p className="min-w-2">Dashboard</p>
-          </ListItem>
-        </Link>}
-
-        <Link to='/articles' className="flex items-center text-white">
-          <ListItem className="flex items-center">
+        <Link to="/articles" className="flex items-center text-white">
+          <ListItem className="flex items-center hover:bg-blue-500/50 px-4 py-2 rounded-lg transition-all">
             <ListItemPrefix>
               <Article className="h-5 w-5" />
             </ListItemPrefix>
@@ -53,8 +52,8 @@ function Navbar() {
           </ListItem>
         </Link>
 
-        <Link to='/profile' className="flex items-center text-white">
-          <ListItem className="flex items-center">
+        <Link to="/profile" className="flex items-center text-white">
+          <ListItem className="flex items-center hover:bg-blue-500/50 px-4 py-2 rounded-lg transition-all">
             <ListItemPrefix>
               <UserCircleIcon className="h-5 w-5" />
             </ListItemPrefix>
@@ -62,51 +61,31 @@ function Navbar() {
           </ListItem>
         </Link>
 
-        <Link to='/logout' className="flex items-center text-white">
-          <ListItem className="flex items-center min-w-[150px]">
-            <ListItemPrefix>
-              <PowerIcon className="h-5 w-5" />
-            </ListItemPrefix>
-            Log Out
-          </ListItem>
-        </Link>
-
+        <AuthButton />
       </List>
 
-      {/* Mobile Menu */}
+
       <div className="md:hidden">
-        <List className="flex flex-row gap-4 items-center">
-          <ListItem className="flex items-center">
-            <Link to="/task" className="text-white">
-              Task
-            </Link>
+        <button className="text-white text-lg focus:outline-none">☰</button>
+        <List className="absolute right-4 top-16 bg-blue-700 rounded-lg shadow-lg hidden">
+          <ListItem>
+            <Link to="/task" className="text-white">Task</Link>
           </ListItem>
-          <ListItem className="flex items-center">
-            <Link to="/dashboard" className="text-white">
-              Dashboard
-            </Link>
+          {userType === "admin" && (
+            <ListItem>
+              <Link to="/dashboard" className="text-white">Dashboard</Link>
+            </ListItem>
+          )}
+          <ListItem>
+            <Link to="/articles" className="text-white">Articles</Link>
           </ListItem>
-          <ListItem className="flex items-center">
-            <Link to="/articles" className="text-white">
-              Articles
-            </Link>
+          <ListItem>
+            <Link to="/profile" className="text-white">Profile</Link>
           </ListItem>
-          <ListItem className="flex items-center">
-            <Link to="/profile" className="text-white">
-              Profile
-            </Link>
-          </ListItem>
-          <ListItem className="flex items-center">
-            <Link to="/logout" className="text-white">
-              Log Out
-            </Link>
+          <ListItem>
+            <AuthButton />
           </ListItem>
         </List>
-        <ListItem className="flex items-center">
-          <Link to="/contact" className="text-white">
-            Contact
-          </Link>
-        </ListItem>
       </div>
     </Card>
   );

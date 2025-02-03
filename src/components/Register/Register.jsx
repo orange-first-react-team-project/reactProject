@@ -39,20 +39,20 @@ function RegisterPage() {
     }));
   };
 
-  const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d@$!%*?&]{8,}$/;
+  // const emailRegEx = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  // const passwordRegEx = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     let formErrors = {};
 
-    if (!emailRegEx.test(formData.email)) {
-      formErrors.email = "Please enter a valid email address!";
-    }
-    if (!passwordRegEx.test(formData.password)) {
-      formErrors.password = "Password must be at least 8 characters long, contain at least one letter, one number, and one special character.";
-    }
+    // if (!emailRegEx.test(formData.email)) {
+    //   formErrors.email = "Please enter a valid email address!";
+    // }
+    // if (!passwordRegEx.test(formData.password)) {
+    //   formErrors.password = "Password must be at least 8 characters long, contain at least one letter, one number, and one special character.";
+    // }
     if (formData.password !== formData.confirmPassword) {
       formErrors.confirmPassword = "Passwords do not match!";
     }
