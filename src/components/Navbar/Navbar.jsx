@@ -60,7 +60,6 @@ function Navbar() {
             Profile
           </ListItem>
         </Link>
-
         <AuthButton />
       </List>
 
